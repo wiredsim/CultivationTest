@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cultivation — Fundraising Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ground: #4A6350;
+      --ground-light: #6B8972;
+      --growth: #7C9A6D;
+      --growth-light: #A8C49E;
+      --bloom: #E8846B;
+      --bloom-light: #F4B5A5;
+      --golden: #E8C86D;
+      --golden-light: #F5DFA0;
+      --potential: #9BB4C7;
+      --potential-light: #C5D5E4;
+      --campaign: #8B7EC8;
+      --campaign-light: #C4BBE8;
+      --hold: #B8A9C4;
+      --hold-light: #DDD5E5;
+      --text: #3D3935;
+      --subtle: #A89F96;
+      --shadow: rgba(61, 57, 53, 0.1);
+      --belt: #E8E4DC;
+      --belt-dark: #D4CFC4;
+      --bucket-bg: #FAFAF8;
+      --bucket-border: #E0DBD2;
+      
+      --month-width: 280px;
+      --month-width-focus: 340px;
+      --campaigns-bar-height: 70px;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(180deg, #F5F3EF 0%, #EBE7E0 100%);
+      min-height: 100vh;
+      color: var(--text);
+      overflow: hidden;
+    }
+    
+    header {
+      padding: 10px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      box-shadow: 0 2px 12px var(--shadow);
+      position: relative;
+      z-index: 100;
+    }
+    
+    .logo {
+      font-family: 'Fraunces', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ground);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--growth) 0%, var(--ground) 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+    }
+    
+    .header-stats {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: #F5F5F5;
+      border-radius: 100px;
+      font-size: 12px;
+    }
+    
+    .stat-pill .label { color: var(--subtle); }
+    .stat-pill .value { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; }
+    .stat-pill .value.positive { color: var(--ground); }
+    
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .template-block {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      background: white;
+      border: 2px dashed var(--bloom);
+      border-radius: 10px;
+      cursor: grab;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    
+    .template-block:hover {
+      background: #FEF6F4;
+      transform: scale(1.02);
+      box-shadow: 0 4px 16px rgba(232, 132, 107, 0.2);
+    }
+    
+    .template-block:active { cursor: grabbing; transform: scale(0.98); }
+    .template-block.dragging { opacity: 0.5; }
+    
+    .template-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--bloom-light) 0%, var(--bloom) 100%);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+    
+    .template-text { display: flex; flex-direction: column; }
+    .template-label { font-size: 12px; font-weight: 600; color: var(--bloom); }
+    .template-hint { font-size: 9px; color: var(--subtle); }
+    
+    .btn-settings {
+      padding: 8px 12px;
+      background: #F5F5F5;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-settings:hover { background: #E8E8E8; }
+    
+    .top-dock {
+      display: flex;
+      background: white;
+      border-bottom: 2px solid var(--belt-dark);
+    }
+    
+    .dock-zone {
+      padding: 10px 16px;
+      min-height: 70px;
+    }
+    
+    .dock-ideas {
+      flex: 2;
+      background: linear-gradient(180deg, #FFFCF5 0%, #FEF9EE 100%);
+      border-right: 2px dashed var(--golden-light);
+    }
+    
+    .dock-hold {
+      flex: 1;
+      background: linear-gradient(180deg, #F8F6FA 0%, #F0ECF4 100%);
+    }
+    
+    .dock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    
+    .dock-title { font-family: 'Fraunces', serif; font-size: 12px; color: var(--text); }
+    .dock-hint { font-size: 10px; color: var(--subtle); }
+    
+    .dock-items {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      min-height: 36px;
+      align-items: flex-start;
+    }
+    
+    .dock-items.drag-over {
+      background: rgba(124, 154, 109, 0.1);
+      border-radius: 8px;
+    }
+    
+    .campaigns-bar {
+      height: var(--campaigns-bar-height);
+      background: linear-gradient(180deg, #F8F6FC 0%, #EFEBF5 100%);
+      border-bottom: 3px solid var(--campaign-light);
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .campaigns-bar-label {
+      position: absolute;
+      left: 12px;
+      top: 8px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--campaign);
+      z-index: 10;
+    }
+    
+    .campaigns-bar-add {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 6px 12px;
+      background: white;
+      border: 2px dashed var(--campaign-light);
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--campaign);
+      cursor: pointer;
+      z-index: 10;
+    }
+    
+    .campaigns-bar-add:hover {
+      background: var(--campaign-light);
+      border-style: solid;
+    }
+    
+    .campaigns-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      display: flex;
+      transition: transform 0.1s ease;
+    }
+    
+    .campaign-grid-line {
+      height: 100%;
+      border-right: 1px dashed var(--campaign-light);
+      opacity: 0.4;
+    }
+    
+    .campaign-block {
+      position: absolute;
+      top: 18px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--campaign) 0%, #7B6CB8 100%);
+      border-radius: 10px;
+      padding: 0 14px;
+      color: white;
+      cursor: grab;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 3px 12px rgba(139, 126, 200, 0.35);
+      transition: box-shadow 0.2s ease;
+      z-index: 5;
+    }
+    
+    .campaign-block:hover { box-shadow: 0 6px 20px rgba(139, 126, 200, 0.45); }
+    .campaign-block.dragging { opacity: 0.7; cursor: grabbing; z-index: 20; }
+    
+    .campaign-block .camp-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    
+    .campaign-block .camp-name {
+      font-weight: 600;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .campaign-block .camp-dates {
+      font-size: 10px;
+      opacity: 0.8;
+      white-space: nowrap;
+    }
+    
+    .campaign-block .camp-amount {
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .campaign-block .camp-edit {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--campaign);
+      color: var(--campaign);
+      font-size: 11px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    
+    .campaign-block:hover .camp-edit { display: flex; }
+    
+    .campaign-block .resize-handle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      cursor: ew-resize;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .resize-handle::after {
+      content: '';
+      width: 4px;
+      height: 20px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+    }
+    
+    .resize-handle.left { left: 0; border-radius: 10px 0 0 10px; }
+    .resize-handle.right { right: 0; border-radius: 0 10px 10px 0; }
+    .campaign-block:hover .resize-handle::after { background: rgba(255,255,255,0.7); }
+    
+    .campaign-block .camp-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 0 0 10px 10px;
+      overflow: hidden;
+    }
+    
+    .campaign-block .camp-progress-fill {
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+    }
+    
+    .scroll-container {
+      position: relative;
+      height: calc(100vh - 210px);
+    }
+    
+    .scroll-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: white;
+      box-shadow: 0 4px 16px var(--shadow);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 50;
+      transition: all 0.2s ease;
+    }
+    
+    .scroll-btn:hover {
+      background: var(--ground);
+      color: white;
+      transform: translateY(-50%) scale(1.1);
+    }
+    
+    .scroll-btn.left { left: 12px; }
+    .scroll-btn.right { right: 12px; }
+    
+    .main-scroll {
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    
+    .main-scroll::-webkit-scrollbar { height: 10px; }
+    .main-scroll::-webkit-scrollbar-track { background: var(--belt); }
+    .main-scroll::-webkit-scrollbar-thumb { background: var(--belt-dark); border-radius: 5px; }
+    
+    .months-grid {
+      display: flex;
+      width: max-content;
+    }
+    
+    .month-column {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 2px dashed var(--belt-dark);
+      background: white;
+    }
+    
+    .month-column:last-child { border-right: none; }
+    .month-column.size-normal { width: var(--month-width); }
+    .month-column.size-focus { width: var(--month-width-focus); }
+    .month-column.status-current { background: linear-gradient(180deg, rgba(232, 132, 107, 0.04) 0%, white 100%); }
+    .month-column.status-next { background: linear-gradient(180deg, rgba(124, 154, 109, 0.03) 0%, white 100%); }
+    .month-column.status-past { opacity: 0.6; }
+    
+    .month-header {
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border-bottom: 1px solid var(--belt-dark);
+    }
+    
+    .month-info {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    
+    .month-name {
+      font-family: 'Fraunces', serif;
+      font-size: 17px;
+      font-weight: 500;
+    }
+    
+    .month-target {
+      font-size: 11px;
+      color: var(--subtle);
+    }
+    
+    .month-target strong { color: var(--text); }
+    
+    .month-status {
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    
+    .month-status.complete { background: var(--ground); color: white; }
+    .month-status.focus { background: var(--bloom); color: white; }
+    .month-status.next { background: var(--growth-light); color: var(--ground); }
+    .month-status.upcoming { background: var(--potential-light); color: #5A7A8A; }
+    
+    .shelves {
+      min-height: 140px;
+      background: var(--belt);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      border-bottom: 3px solid var(--belt-dark);
+      flex-shrink: 0;
+    }
+    
+    .shelves::after {
+      content: '↓';
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px;
+      color: var(--subtle);
+      opacity: 0.2;
+    }
+    
+    .shelf {
+      min-height: 36px;
+      padding: 4px 6px;
+      padding-top: 16px;
+      border-radius: 6px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-content: flex-start;
+      position: relative;
+      transition: background 0.2s ease;
+    }
+    
+    .shelf.drag-over { background: rgba(124, 154, 109, 0.15); }
+    
+    .shelf::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 6px;
+      top: 2px;
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--subtle);
+      opacity: 0.7;
+    }
+    
+    .shelf-nurturing { border-top: 2px dashed var(--growth-light); }
+    .shelf-ready { border-top: 2px dashed var(--bloom-light); }
+    .shelf-committed { border-top: 2px dashed var(--golden); background: rgba(232, 200, 109, 0.08); }
+    
+    .progress-container {
+      padding: 8px;
+      flex-shrink: 0;
+    }
+    
+    .progress-bar {
+      height: 100px;
+      background: var(--bucket-bg);
+      border: 3px solid var(--bucket-border);
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .progress-bar.drag-target {
+      border-color: var(--ground);
+      box-shadow: 0 0 0 4px rgba(74, 99, 80, 0.2);
+    }
+    
+    .progress-fills {
+      position: absolute;
+      bottom: 26px;
+      left: 0;
+      right: 0;
+      top: 0;
+      overflow: hidden;
+      border-radius: 11px 11px 0 0;
+    }
+    
+    /* Baseline is the bottom-most layer with clickable label */
+    .fill-baseline {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, var(--potential-light) 0%, var(--potential) 100%);
+      transition: height 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 3px;
+    }
+    
+    .fill-baseline .baseline-label {
+      font-size: 8px;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      font-weight: 500;
+      cursor: pointer;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(0,0,0,0.15);
+      transition: background 0.2s ease;
+      white-space: nowrap;
+    }
+    
+    .fill-baseline .baseline-label:hover {
+      background: rgba(0,0,0,0.3);
+    }
+    
+    /* Secured stacks on top of baseline */
+    .fill-secured {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, var(--ground-light) 0%, var(--ground) 100%);
+      transition: height 0.3s ease;
+    }
+    
+    /* Campaign projection stacks on secured */
+    .fill-campaign {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(139, 126, 200, 0.4),
+        rgba(139, 126, 200, 0.4) 3px,
+        rgba(139, 126, 200, 0.15) 3px,
+        rgba(139, 126, 200, 0.15) 6px
+      );
+      border-top: 2px dashed var(--campaign);
+      transition: height 0.3s ease;
+    }
+    
+    /* Shelf projection stacks on campaign */
+    .fill-shelf {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(124, 154, 109, 0.35),
+        rgba(124, 154, 109, 0.35) 3px,
+        rgba(124, 154, 109, 0.12) 3px,
+        rgba(124, 154, 109, 0.12) 6px
+      );
+      border-top: 2px dashed rgba(124, 154, 109, 0.7);
+      transition: height 0.3s ease;
+    }
+    
+    /* Over-target spills from top */
+    .fill-over {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, var(--golden) 0%, var(--golden-light) 100%);
+      transition: height 0.3s ease;
+    }
+    
+    .target-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--text);
+      opacity: 0.35;
+      z-index: 5;
+    }
+    
+    .target-line::after {
+      content: 'Target';
+      position: absolute;
+      right: 4px;
+      top: -9px;
+      font-size: 8px;
+      color: var(--subtle);
+      background: rgba(255,255,255,0.9);
+      padding: 0 3px;
+      border-radius: 2px;
+    }
+    
+    .progress-items {
+      position: absolute;
+      z-index: 10;
+      bottom: 28px;
+      left: 4px;
+      right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      max-height: 40px;
+      overflow-y: auto;
+    }
+    
+    .progress-item {
+      background: white;
+      border-radius: 3px;
+      padding: 2px 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 8px;
+      box-shadow: 0 1px 2px var(--shadow);
+    }
+    
+    .progress-item .item-name { font-weight: 500; }
+    .progress-item .item-amount { font-family: 'Fraunces', serif; font-weight: 600; color: var(--ground); font-size: 9px; }
+    
+    .progress-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 4px 10px;
+      background: white;
+      border-top: 2px solid var(--bucket-border);
+      border-radius: 0 0 11px 11px;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .progress-total { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600; }
+    .progress-gap { font-size: 10px; font-weight: 600; }
+    .progress-gap.over { color: var(--ground); }
+    .progress-gap.under { color: var(--bloom); }
+    
+    .opp-block {
+      background: white;
+      border-radius: 8px;
+      cursor: grab;
+      transition: all 0.15s ease;
+      position: relative;
+      box-shadow: 0 2px 8px var(--shadow);
+      border: 2px solid transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .opp-block:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 24px var(--shadow);
+      z-index: 10;
+    }
+    
+    .opp-block.dragging { opacity: 0.3; transform: scale(0.95); }
+    
+    .opp-block .opp-edit {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--ground);
+      color: var(--ground);
+      font-size: 9px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    
+    .opp-block:hover .opp-edit { display: flex; }
+    
+    .opp-block .opp-category {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      background: white;
+      box-shadow: 0 1px 3px var(--shadow);
+      border: 2px solid;
+    }
+    
+    .opp-category.cat-individual { border-color: var(--potential); }
+    .opp-category.cat-grant { border-color: var(--growth); }
+    .opp-category.cat-event { border-color: var(--bloom); }
+    .opp-category.cat-corporate { border-color: var(--golden); }
+    
+    .opp-block .opp-name {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    
+    .opp-block .opp-amount {
+      font-family: 'Fraunces', serif;
+      font-weight: 600;
+      color: var(--ground);
+      line-height: 1;
+    }
+    
+    .opp-block[data-size="2k"] { width: 48px; padding: 5px 6px; }
+    .opp-block[data-size="2k"] .opp-amount { font-size: 11px; }
+    .opp-block[data-size="2k"] .opp-name { font-size: 8px; }
+    
+    .opp-block[data-size="5k"] { width: 65px; padding: 6px 8px; }
+    .opp-block[data-size="5k"] .opp-amount { font-size: 13px; }
+    .opp-block[data-size="5k"] .opp-name { font-size: 9px; }
+    
+    .opp-block[data-size="8k"] { width: 85px; padding: 8px 10px; }
+    .opp-block[data-size="8k"] .opp-amount { font-size: 15px; }
+    
+    .opp-block[data-size="10k"] { width: 100px; padding: 10px 12px; }
+    .opp-block[data-size="10k"] .opp-amount { font-size: 17px; }
+    
+    .opp-block[data-size="15k"] { width: 125px; padding: 12px 14px; }
+    .opp-block[data-size="15k"] .opp-amount { font-size: 20px; }
+    .opp-block[data-size="15k"] .opp-name { font-size: 11px; }
+    
+    .opp-block[data-size="20k"] { width: 150px; padding: 14px 16px; }
+    .opp-block[data-size="20k"] .opp-amount { font-size: 24px; }
+    .opp-block[data-size="20k"] .opp-name { font-size: 12px; }
+    
+    .opp-block[data-size="30k"] { width: 180px; padding: 16px 18px; }
+    .opp-block[data-size="30k"] .opp-amount { font-size: 28px; }
+    .opp-block[data-size="30k"] .opp-name { font-size: 13px; }
+    
+    .opp-block[data-size="50k"] { width: 220px; padding: 20px 22px; }
+    .opp-block[data-size="50k"] .opp-amount { font-size: 34px; }
+    .opp-block[data-size="50k"] .opp-name { font-size: 14px; }
+    
+    .opp-block.stage-nurturing { border-color: var(--growth-light); }
+    .opp-block.stage-ready { border-color: var(--bloom); }
+    .opp-block.stage-committed { border-color: var(--golden); background: #FFFDF8; }
+    
+    .opp-block.big-fish {
+      background: linear-gradient(135deg, #FFFDF8 0%, #FEF6E8 100%);
+      border: 2px dashed var(--golden);
+    }
+    .opp-block.big-fish .opp-amount { color: var(--golden); }
+    
+    .opp-block.on-hold {
+      background: #F5F2F8;
+      border: 2px dashed var(--hold);
+      opacity: 0.8;
+    }
+    .opp-block.on-hold .opp-amount { color: var(--hold); }
+    
+    .opp-block.new-opp {
+      border: 2px dashed var(--bloom);
+      background: #FEF6F4;
+      animation: pulse-new 1s ease infinite;
+    }
+    
+    @keyframes pulse-new {
+      0%, 100% { box-shadow: 0 2px 8px var(--shadow); }
+      50% { box-shadow: 0 4px 16px rgba(232, 132, 107, 0.3); }
+    }
+    
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 500;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active { opacity: 1; visibility: visible; }
+    
+    .edit-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100%;
+      background: white;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+      z-index: 501;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .modal-overlay.active .edit-panel { transform: translateX(0); }
+    
+    .edit-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #EEE;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .edit-title { font-family: 'Fraunces', serif; font-size: 17px; font-weight: 500; }
+    
+    .edit-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #F5F5F5;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    
+    .edit-body { flex: 1; padding: 18px; overflow-y: auto; }
+    .edit-section { margin-bottom: 18px; }
+    
+    .edit-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--subtle);
+      margin-bottom: 5px;
+    }
+    
+    .edit-input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+    }
+    
+    .edit-input:focus { outline: none; border-color: var(--ground); }
+    
+    .edit-input-amount {
+      font-family: 'Fraunces', serif;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    
+    .amount-hint {
+      font-size: 10px;
+      color: var(--subtle);
+      margin-top: 4px;
+    }
+    
+    .category-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+    
+    .category-option {
+      padding: 10px 6px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .category-option:hover { border-color: #CCC; }
+    .category-option.selected { border-color: var(--ground); background: #F0F5F1; }
+    .category-option .cat-icon { font-size: 18px; display: block; }
+    .category-option .cat-name { font-size: 9px; color: var(--subtle); margin-top: 3px; }
+    
+    .stage-options { display: flex; flex-direction: column; gap: 5px; }
+    
+    .stage-option {
+      padding: 10px 12px;
+      border: 2px solid #E5E5E5;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    
+    .stage-option:hover { border-color: #CCC; }
+    .stage-option.selected { border-color: var(--ground); background: #F0F5F1; }
+    .stage-option .stage-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .stage-option .stage-dot.nurturing { background: var(--growth); }
+    .stage-option .stage-dot.ready { background: var(--bloom); }
+    .stage-option .stage-dot.committed { background: var(--golden); }
+    .stage-option .stage-name { font-size: 13px; font-weight: 500; }
+    
+    .edit-footer {
+      padding: 14px 20px;
+      border-top: 1px solid #EEE;
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 11px;
+      border-radius: 8px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .btn-primary { background: var(--ground); color: white; }
+    .btn-primary:hover { background: #3A5340; }
+    .btn-secondary { background: #F5F5F5; color: var(--text); }
+    .btn-danger { background: #FEE; color: var(--bloom); }
+    .btn-hold { background: var(--hold-light); color: #6B5A7A; }
+    
+    .center-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      width: 90%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+      z-index: 502;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .center-modal.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .center-modal h3 { font-family: 'Fraunces', serif; font-size: 18px; margin-bottom: 18px; }
+    
+    .month-range { display: flex; gap: 10px; align-items: center; }
+    
+    .month-range select {
+      flex: 1;
+      padding: 9px 11px;
+      border: 2px solid #E5E5E5;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+    }
+    
+    .month-range select:focus { outline: none; border-color: var(--campaign); }
+    .month-range .range-arrow { color: var(--subtle); font-size: 16px; }
+    .btn-row { display: flex; gap: 10px; margin-top: 20px; }
+    
+    .baseline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .baseline-row label { flex: 1; font-size: 13px; }
+    
+    .baseline-row input {
+      width: 100px;
+      padding: 8px 10px;
+      border: 2px solid #E5E5E5;
+      border-radius: 6px;
+      font-family: 'Fraunces', serif;
+      font-size: 16px;
+      text-align: right;
+    }
+    
+    .baseline-row input:focus { outline: none; border-color: var(--ground); }
+    
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text);
+      color: white;
+      padding: 11px 22px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    
+    .toast.visible { opacity: 1; transform: translateX(-50%) translateY(0); }
+    
+    /* Settings Modal */
+    .settings-section {
+      margin-bottom: 20px;
+    }
+    
+    .settings-section h4 {
+      font-family: 'Fraunces', serif;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+    
+    .settings-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    
+    .settings-row input, .settings-row select {
+      flex: 1;
+      padding: 8px 10px;
+      border: 2px solid #E5E5E5;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+    }
+    
+    .settings-row input:focus, .settings-row select:focus {
+      outline: none;
+      border-color: var(--ground);
+    }
+    
+    .data-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dashed #E5E5E5;
+    }
+    
+    .data-actions .btn {
+      font-size: 11px;
+      padding: 8px 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📦</div>
+      Cultivation
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill">
+        <span class="label">YTD</span>
+        <span class="value positive" id="statYTD">$0</span>
+      </div>
+      <div class="stat-pill">
+        <span class="label">Goal</span>
+        <span class="value" id="statGoal">$400K</span>
+      </div>
+      <div class="stat-pill">
+        <span class="label">Pipeline</span>
+        <span class="value" id="statPipeline">$0</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="template-block" id="templateBlock" draggable="true">
+        <div class="template-icon">+</div>
+        <div class="template-text">
+          <span class="template-label">New Opportunity</span>
+          <span class="template-hint">Drag & drop anywhere</span>
+        </div>
+      </div>
+      <button class="btn-settings" onclick="openSettings()" title="Settings">⚙️</button>
+    </div>
+  </header>
+
+  <div class="top-dock">
+    <div class="dock-zone dock-ideas">
+      <div class="dock-header">
+        <div class="dock-title">🐋 Big Fish</div>
+        <div class="dock-hint">Drag to a month →</div>
+      </div>
+      <div class="dock-items" id="dockIdeas"></div>
+    </div>
+    <div class="dock-zone dock-hold">
+      <div class="dock-header">
+        <div class="dock-title">⏸️ On Hold</div>
+      </div>
+      <div class="dock-items" id="dockHold"></div>
+    </div>
+  </div>
+
+  <div class="campaigns-bar" id="campaignsBar">
+    <div class="campaigns-bar-label">📣 Campaigns</div>
+    <button class="campaigns-bar-add" onclick="openCampaignModal()">+ Add</button>
+    <div class="campaigns-track" id="campaignsTrack"></div>
+  </div>
+
+  <div class="scroll-container">
+    <button class="scroll-btn left" onclick="scrollMonths(-1)">‹</button>
+    <button class="scroll-btn right" onclick="scrollMonths(1)">›</button>
+    
+    <div class="main-scroll" id="mainScroll">
+      <div class="months-grid" id="monthsGrid"></div>
+    </div>
+  </div>
+
+  <!-- Edit Panel -->
+  <div class="modal-overlay" id="editOverlay" onclick="closeEdit()">
+    <div class="edit-panel" onclick="event.stopPropagation()">
+      <div class="edit-header">
+        <div class="edit-title" id="editPanelTitle">Edit Opportunity</div>
+        <button class="edit-close" onclick="closeEdit()">×</button>
+      </div>
+      <div class="edit-body">
+        <div class="edit-section">
+          <div class="edit-label">Name</div>
+          <input type="text" class="edit-input" id="editName" placeholder="Enter name...">
+        </div>
+        <div class="edit-section">
+          <div class="edit-label">Amount</div>
+          <input type="text" class="edit-input edit-input-amount" id="editAmount" placeholder="25">
+          <div class="amount-hint">💡 Enter in thousands (25 = $25K)</div>
+        </div>
+        <div class="edit-section">
+          <div class="edit-label">Category</div>
+          <div class="category-options">
+            <div class="category-option" data-category="individual" onclick="selectCategory(this)">
+              <span class="cat-icon">👤</span>
+              <span class="cat-name">Person</span>
+            </div>
+            <div class="category-option" data-category="grant" onclick="selectCategory(this)">
+              <span class="cat-icon">🏛️</span>
+              <span class="cat-name">Grant</span>
+            </div>
+            <div class="category-option" data-category="event" onclick="selectCategory(this)">
+              <span class="cat-icon">🎉</span>
+              <span class="cat-name">Event</span>
+            </div>
+            <div class="category-option" data-category="corporate" onclick="selectCategory(this)">
+              <span class="cat-icon">🏢</span>
+              <span class="cat-name">Corp</span>
+            </div>
+          </div>
+        </div>
+        <div class="edit-section">
+          <div class="edit-label">Stage</div>
+          <div class="stage-options">
+            <div class="stage-option" data-stage="nurturing" onclick="selectStage(this)">
+              <span class="stage-dot nurturing"></span>
+              <span class="stage-name">Nurturing</span>
+            </div>
+            <div class="stage-option" data-stage="ready" onclick="selectStage(this)">
+              <span class="stage-dot ready"></span>
+              <span class="stage-name">Ready to Ask</span>
+            </div>
+            <div class="stage-option" data-stage="committed" onclick="selectStage(this)">
+              <span class="stage-dot committed"></span>
+              <span class="stage-name">Committed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="edit-footer">
+        <button class="btn btn-danger" onclick="deleteOpp()">Delete</button>
+        <button class="btn btn-hold" onclick="putOnHold()">Hold</button>
+        <button class="btn btn-primary" onclick="saveEdit()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Campaign Modal -->
+  <div class="modal-overlay" id="campaignOverlay" onclick="closeCampaignModal()">
+    <div class="center-modal" id="campaignModal" onclick="event.stopPropagation()">
+      <h3>📣 <span id="campaignModalTitle">New Campaign</span></h3>
+      <div class="edit-section">
+        <div class="edit-label">Campaign Name</div>
+        <input type="text" class="edit-input" id="campaignName" placeholder="e.g., Fall Appeal">
+      </div>
+      <div class="edit-section">
+        <div class="edit-label">Goal Amount</div>
+        <input type="text" class="edit-input edit-input-amount" id="campaignGoal" placeholder="45">
+        <div class="amount-hint">💡 Enter in thousands (45 = $45K)</div>
+      </div>
+      <div class="edit-section">
+        <div class="edit-label">Duration</div>
+        <div class="month-range">
+          <select id="campaignStart"></select>
+          <span class="range-arrow">→</span>
+          <select id="campaignEnd"></select>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="closeCampaignModal()">Cancel</button>
+        <button class="btn btn-danger" id="campaignDeleteBtn" onclick="deleteCampaign()" style="display:none;">Delete</button>
+        <button class="btn btn-primary" onclick="saveCampaign()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Baseline Modal -->
+  <div class="modal-overlay" id="baselineOverlay" onclick="closeBaselineModal()">
+    <div class="center-modal" id="baselineModal" onclick="event.stopPropagation()">
+      <h3>📊 Edit Baseline — <span id="baselineMonthName">July</span></h3>
+      <div class="baseline-row">
+        <label>Name / Label</label>
+        <input type="text" id="baselineName" value="Recurring" style="width:140px;font-family:'DM Sans';font-size:13px;">
+      </div>
+      <div class="baseline-row">
+        <label>Monthly Recurring</label>
+        <input type="text" id="baselineRecurring" placeholder="5">
+      </div>
+      <div class="baseline-row">
+        <label>Earned Revenue</label>
+        <input type="text" id="baselineEarned" placeholder="3">
+      </div>
+      <div class="amount-hint" style="margin-top:-8px;margin-bottom:12px;">💡 Enter in thousands (5 = $5K)</div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="closeBaselineModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBaseline()">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsOverlay" onclick="closeSettings()">
+    <div class="center-modal" id="settingsModal" onclick="event.stopPropagation()" style="max-width:500px;">
+      <h3>⚙️ Settings</h3>
+      
+      <div class="settings-section">
+        <h4>Annual Goal</h4>
+        <div class="settings-row">
+          <input type="text" id="settingsGoal" placeholder="400">
+          <span style="padding:8px;color:var(--subtle);">× $1,000</span>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4>Fiscal Year Start</h4>
+        <div class="settings-row">
+          <select id="settingsStartMonth">
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6" selected>July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
+          </select>
+          <select id="settingsStartYear">
+            <option value="2024">2024</option>
+            <option value="2025" selected>2025</option>
+            <option value="2026">2026</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <h4>Current Month</h4>
+        <div class="settings-row">
+          <select id="settingsCurrentMonth">
+            <option value="0">1st month</option>
+            <option value="1" selected>2nd month</option>
+            <option value="2">3rd month</option>
+            <option value="3">4th month</option>
+            <option value="4">5th month</option>
+            <option value="5">6th month</option>
+            <option value="6">7th month</option>
+            <option value="7">8th month</option>
+            <option value="8">9th month</option>
+            <option value="9">10th month</option>
+            <option value="10">11th month</option>
+            <option value="11">12th month</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="data-actions">
+        <button class="btn btn-secondary" onclick="exportData()">📤 Export Data</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()">📥 Import Data</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-danger" onclick="resetData()">🗑️ Reset All</button>
+      </div>
+      
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="closeSettings()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save & Rebuild</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // =====================================================================
+    // CONFIGURATION - Edit these values to customize your fiscal year
+    // =====================================================================
+    const DEFAULT_CONFIG = {
+      annualGoal: 400000,        // Total annual fundraising goal
+      fiscalStartMonth: 6,       // 0=Jan, 6=Jul, etc.
+      fiscalStartYear: 2025,     // Starting year
+      currentMonthIndex: 1,      // Which month of fiscal year is "current" (0-indexed)
+      defaultTarget: 30000,      // Default monthly target
+      defaultBaseline: { name: 'Recurring', recurring: 4000, earned: 2000 }
+    };
+
+    // =====================================================================
+    // DATA STORAGE - Uses localStorage for persistence
+    // =====================================================================
+    const STORAGE_KEY = 'cultivation_data';
+    
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+      } catch (e) {
+        console.warn('Could not load saved data:', e);
+      }
+      return null;
+    }
+    
+    function saveData() {
+      const data = {
+        config: CONFIG,
+        months: MONTHS,
+        campaigns: CAMPAIGNS,
+        bigFish: collectOpps('dockIdeas'),
+        onHold: collectOpps('dockHold'),
+        shelfOpps: collectAllShelfOpps()
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    
+    function collectOpps(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+      return Array.from(container.querySelectorAll('.opp-block')).map(block => ({
+        id: block.dataset.id,
+        name: block.querySelector('.opp-name').textContent,
+        amount: parseInt(block.dataset.amount),
+        category: block.dataset.category
+      }));
+    }
+    
+    function collectAllShelfOpps() {
+      const result = {};
+      document.querySelectorAll('.month-column').forEach(col => {
+        const idx = parseInt(col.dataset.monthIdx);
+        const monthKey = MONTHS[idx].name.toLowerCase();
+        result[monthKey] = [];
+        col.querySelectorAll('.shelf .opp-block').forEach(block => {
+          result[monthKey].push({
+            id: block.dataset.id,
+            name: block.querySelector('.opp-name').textContent,
+            amount: parseInt(block.dataset.amount),
+            category: block.dataset.category,
+            stage: block.dataset.stage
+          });
+        });
+      });
+      return result;
+    }
+
+    // =====================================================================
+    // INITIALIZATION
+    // =====================================================================
+    let CONFIG = { ...DEFAULT_CONFIG };
+    let MONTHS = [];
+    let CAMPAIGNS = [];
+    let BIG_FISH = [];
+    let ON_HOLD = [];
+    let SHELF_OPPS = {};
+    
+    function generateMonths() {
+      MONTHS = [];
+      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+      const shortNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      
+      for (let i = 0; i < 12; i++) {
+        const monthIdx = (CONFIG.fiscalStartMonth + i) % 12;
+        const yearOffset = Math.floor((CONFIG.fiscalStartMonth + i) / 12);
+        const year = CONFIG.fiscalStartYear + yearOffset;
+        
+        let status = 'upcoming';
+        if (i < CONFIG.currentMonthIndex) status = 'past';
+        else if (i === CONFIG.currentMonthIndex) status = 'current';
+        else if (i === CONFIG.currentMonthIndex + 1) status = 'next';
+        
+        MONTHS.push({
+          name: monthNames[monthIdx],
+          short: shortNames[monthIdx],
+          year: year,
+          target: CONFIG.defaultTarget,
+          secured: 0,
+          status: status,
+          baseline: { ...CONFIG.defaultBaseline }
+        });
+      }
+    }
+    
+    function initializeApp() {
+      const saved = loadData();
+      
+      if (saved) {
+        CONFIG = saved.config || DEFAULT_CONFIG;
+        MONTHS = saved.months || [];
+        CAMPAIGNS = saved.campaigns || [];
+        BIG_FISH = saved.bigFish || [];
+        ON_HOLD = saved.onHold || [];
+        SHELF_OPPS = saved.shelfOpps || {};
+        
+        if (MONTHS.length === 0) generateMonths();
+      } else {
+        generateMonths();
+        // Demo data for first run
+        CAMPAIGNS = [
+          { id: 'fall-appeal', name: 'Fall Appeal', amount: 45000, raised: 0, start: 2, end: 4 }
+        ];
+        BIG_FISH = [
+          { id: 'bf1', name: 'Major Donor', amount: 25000, category: 'individual' }
+        ];
+      }
+      
+      renderAll();
+    }
+    
+    function renderAll() {
+      renderDock();
+      renderCampaignsBar();
+      renderMonths();
+      populateCampaignSelects();
+      setupDropZones();
+      setupTemplateDrag();
+      updateAllTotals();
+      document.getElementById('mainScroll').addEventListener('scroll', syncCampaignScroll);
+      document.getElementById('statGoal').textContent = '$' + formatAmount(CONFIG.annualGoal);
+    }
+
+    // =====================================================================
+    // HELPERS
+    // =====================================================================
+    function getMonthWidth(idx) {
+      return (MONTHS[idx].status === 'current' || MONTHS[idx].status === 'next') ? 340 : 280;
+    }
+    
+    function getMonthOffset(idx) {
+      let offset = 0;
+      for (let i = 0; i < idx; i++) offset += getMonthWidth(i);
+      return offset;
+    }
+    
+    function getTotalWidth() {
+      return MONTHS.reduce((sum, m, i) => sum + getMonthWidth(i), 0);
+    }
+
+    function getSize(amount) {
+      if (amount >= 40000) return '50k';
+      if (amount >= 25000) return '30k';
+      if (amount >= 18000) return '20k';
+      if (amount >= 12000) return '15k';
+      if (amount >= 8000) return '10k';
+      if (amount >= 6000) return '8k';
+      if (amount >= 4000) return '5k';
+      return '2k';
+    }
+
+    function getCategoryIcon(cat) {
+      return { individual: '👤', grant: '🏛️', event: '🎉', corporate: '🏢' }[cat] || '👤';
+    }
+
+    function formatAmount(num) {
+      if (num >= 1000) return Math.round(num / 1000) + 'K';
+      return num.toLocaleString();
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+    
+    function parseAmount(str) {
+      const num = parseInt(String(str).replace(/[^0-9]/g, '')) || 0;
+      if (num > 0 && num < 1000) return num * 1000;
+      return num;
+    }
+    
+    function displayAmountForInput(amount) {
+      if (amount >= 1000) return Math.round(amount / 1000);
+      return amount;
+    }
+    
+    function getCampaignContribution(monthIdx) {
+      let total = 0;
+      CAMPAIGNS.forEach(camp => {
+        if (monthIdx >= camp.start && monthIdx <= camp.end) {
+          const monthsSpan = camp.end - camp.start + 1;
+          total += Math.round(camp.amount / monthsSpan);
+        }
+      });
+      return total;
+    }
+
+    // =====================================================================
+    // RENDER FUNCTIONS
+    // =====================================================================
+    function renderDock() {
+      const ideasEl = document.getElementById('dockIdeas');
+      const holdEl = document.getElementById('dockHold');
+      ideasEl.innerHTML = '';
+      holdEl.innerHTML = '';
+      
+      BIG_FISH.forEach(opp => ideasEl.appendChild(createOppBlock(opp, 'big-fish')));
+      ON_HOLD.forEach(opp => holdEl.appendChild(createOppBlock(opp, 'on-hold')));
+    }
+
+    function renderCampaignsBar() {
+      const track = document.getElementById('campaignsTrack');
+      track.innerHTML = '';
+      track.style.width = getTotalWidth() + 'px';
+      
+      MONTHS.forEach((m, i) => {
+        const line = document.createElement('div');
+        line.className = 'campaign-grid-line';
+        line.style.width = getMonthWidth(i) + 'px';
+        track.appendChild(line);
+      });
+      
+      CAMPAIGNS.forEach(camp => {
+        const left = getMonthOffset(camp.start);
+        let width = 0;
+        for (let i = camp.start; i <= camp.end; i++) width += getMonthWidth(i);
+        
+        const block = document.createElement('div');
+        block.className = 'campaign-block';
+        block.dataset.id = camp.id;
+        block.style.left = left + 'px';
+        block.style.width = width + 'px';
+        
+        const progress = camp.amount > 0 ? Math.round((camp.raised / camp.amount) * 100) : 0;
+        const monthsSpan = camp.end - camp.start + 1;
+        const perMonth = Math.round(camp.amount / monthsSpan);
+        
+        block.innerHTML = `
+          <div class="resize-handle left"></div>
+          <div class="resize-handle right"></div>
+          <button class="camp-edit">✎</button>
+          <div class="camp-info">
+            <span class="camp-name">${camp.name}</span>
+            <span class="camp-dates">${MONTHS[camp.start].short} — ${MONTHS[camp.end].short} · $${formatAmount(perMonth)}/mo</span>
+          </div>
+          <span class="camp-amount">$${formatAmount(camp.amount)}</span>
+          <div class="camp-progress"><div class="camp-progress-fill" style="width:${progress}%"></div></div>
+        `;
+        
+        block.querySelector('.camp-edit').onclick = (e) => { e.stopPropagation(); openCampaignEdit(camp); };
+        block.ondblclick = () => openCampaignEdit(camp);
+        block.querySelector('.resize-handle.left').onmousedown = (e) => startCampaignResize(e, camp, 'left');
+        block.querySelector('.resize-handle.right').onmousedown = (e) => startCampaignResize(e, camp, 'right');
+        block.onmousedown = (e) => {
+          if (e.target.classList.contains('resize-handle') || e.target.classList.contains('camp-edit')) return;
+          startCampaignDrag(e, camp, block);
+        };
+        
+        track.appendChild(block);
+      });
+    }
+
+    function renderMonths() {
+      const grid = document.getElementById('monthsGrid');
+      grid.innerHTML = '';
+      
+      MONTHS.forEach((month, idx) => {
+        const isFocus = month.status === 'current' || month.status === 'next';
+        const col = document.createElement('div');
+        col.className = `month-column ${isFocus ? 'size-focus' : 'size-normal'} status-${month.status}`;
+        col.style.width = getMonthWidth(idx) + 'px';
+        col.dataset.monthIdx = idx;
+        
+        let statusLabel = 'Upcoming', statusClass = 'upcoming';
+        if (month.status === 'past') { statusLabel = '✓ Done'; statusClass = 'complete'; }
+        if (month.status === 'current') { statusLabel = '🎯 Now'; statusClass = 'focus'; }
+        if (month.status === 'next') { statusLabel = 'Next'; statusClass = 'next'; }
+        
+        const baselineTotal = (month.baseline.recurring || 0) + (month.baseline.earned || 0);
+        
+        col.innerHTML = `
+          <div class="month-header">
+            <div class="month-info">
+              <div class="month-name">${month.short} '${String(month.year).slice(2)}</div>
+              <div class="month-target">Target: <strong>$${formatAmount(month.target)}</strong></div>
+            </div>
+            <div class="month-status ${statusClass}">${statusLabel}</div>
+          </div>
+          
+          <div class="shelves" data-month="${month.name.toLowerCase()}">
+            <div class="shelf shelf-nurturing" data-stage="nurturing" data-label="Nurturing"></div>
+            <div class="shelf shelf-ready" data-stage="ready" data-label="Ready"></div>
+            <div class="shelf shelf-committed" data-stage="committed" data-label="Committed"></div>
+          </div>
+          
+          <div class="progress-container">
+            <div class="progress-bar" data-month="${month.name.toLowerCase()}" data-month-idx="${idx}" data-target="${month.target}" data-secured="${month.secured}">
+              <div class="progress-fills">
+                <div class="fill-over"></div>
+                <div class="fill-shelf"></div>
+                <div class="fill-campaign"></div>
+                <div class="fill-secured"></div>
+                <div class="fill-baseline"><span class="baseline-label" onclick="openBaselineModal(${idx})">${month.baseline.name} $${formatAmount(baselineTotal)}</span></div>
+              </div>
+              <div class="target-line" style="bottom: calc(70% + 26px);"></div>
+              <div class="progress-items"></div>
+              <div class="progress-footer">
+                <span class="progress-total" data-total>$${formatAmount(month.secured)}</span>
+                <span class="progress-gap" data-gap></span>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        grid.appendChild(col);
+        
+        // Add shelf opps
+        const monthKey = month.name.toLowerCase();
+        if (SHELF_OPPS[monthKey]) {
+          SHELF_OPPS[monthKey].forEach(opp => {
+            const shelf = col.querySelector(`.shelf[data-stage="${opp.stage}"]`);
+            if (shelf) shelf.appendChild(createOppBlock(opp, 'stage-' + opp.stage));
+          });
+        }
+      });
+      
+      setupDropZones();
+      updateAllTotals();
+    }
+
+    function createOppBlock(opp, extraClass = '') {
+      const block = document.createElement('div');
+      block.className = `opp-block ${extraClass}`;
+      block.draggable = true;
+      block.dataset.id = opp.id;
+      block.dataset.amount = opp.amount;
+      block.dataset.size = getSize(opp.amount);
+      block.dataset.category = opp.category;
+      if (opp.stage) block.dataset.stage = opp.stage;
+      
+      block.innerHTML = `
+        <span class="opp-category cat-${opp.category}">${getCategoryIcon(opp.category)}</span>
+        <button class="opp-edit">✎</button>
+        <div class="opp-name">${opp.name}</div>
+        <div class="opp-amount">$${formatAmount(opp.amount)}</div>
+      `;
+      
+      block.querySelector('.opp-edit').onclick = (e) => { e.stopPropagation(); openEdit(block); };
+      block.ondblclick = () => openEdit(block);
+      block.addEventListener('dragstart', handleDragStart);
+      block.addEventListener('dragend', handleDragEnd);
+      
+      return block;
+    }
+
+    function populateCampaignSelects() {
+      const startSel = document.getElementById('campaignStart');
+      const endSel = document.getElementById('campaignEnd');
+      startSel.innerHTML = '';
+      endSel.innerHTML = '';
+      MONTHS.forEach((m, i) => {
+        startSel.innerHTML += `<option value="${i}">${m.name} ${m.year}</option>`;
+        endSel.innerHTML += `<option value="${i}">${m.name} ${m.year}</option>`;
+      });
+    }
+
+    function syncCampaignScroll() {
+      const scrollLeft = document.getElementById('mainScroll').scrollLeft;
+      document.getElementById('campaignsTrack').style.transform = `translateX(-${scrollLeft}px)`;
+    }
+
+    // =====================================================================
+    // DRAG & DROP
+    // =====================================================================
+    let draggedItem = null;
+    let isTemplateDrag = false;
+    let templateDropTarget = null;
+    let currentEditBlock = null;
+    let currentCampaign = null;
+    let currentBaselineMonth = null;
+    let resizingCampaign = null;
+    let resizeEdge = null;
+    let campaignDragData = null;
+
+    function setupTemplateDrag() {
+      const template = document.getElementById('templateBlock');
+      
+      template.addEventListener('dragstart', (e) => {
+        isTemplateDrag = true;
+        template.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'copy';
+        e.dataTransfer.setData('text/plain', 'new-opp');
+      });
+      
+      template.addEventListener('dragend', () => {
+        isTemplateDrag = false;
+        template.classList.remove('dragging');
+        if (templateDropTarget) {
+          createNewOppAt(templateDropTarget);
+          templateDropTarget = null;
+        }
+        document.querySelectorAll('.shelf, .progress-bar, .dock-items').forEach(el => el.classList.remove('drag-over'));
+      });
+    }
+
+    function createNewOppAt(target) {
+      const newId = 'new-' + Date.now();
+      const opp = { id: newId, name: '', amount: 10000, category: 'individual' };
+      
+      let extraClass = 'new-opp';
+      if (target.classList.contains('shelf')) {
+        opp.stage = target.dataset.stage;
+        extraClass += ' stage-' + opp.stage;
+      } else if (target.id === 'dockIdeas') {
+        extraClass += ' big-fish';
+      } else if (target.id === 'dockHold') {
+        extraClass += ' on-hold';
+      }
+      
+      const block = createOppBlock(opp, extraClass);
+      target.appendChild(block);
+      setTimeout(() => block.classList.remove('new-opp'), 2000);
+      openEdit(block, true);
+      updateAllTotals();
+    }
+
+    function startCampaignDrag(e, camp, block) {
+      e.preventDefault();
+      campaignDragData = { camp, block, startX: e.clientX, startLeft: getMonthOffset(camp.start) };
+      block.classList.add('dragging');
+      document.addEventListener('mousemove', doCampaignDrag);
+      document.addEventListener('mouseup', endCampaignDrag);
+    }
+
+    function doCampaignDrag(e) {
+      if (!campaignDragData) return;
+      const dx = e.clientX - campaignDragData.startX;
+      campaignDragData.block.style.left = Math.max(0, campaignDragData.startLeft + dx) + 'px';
+    }
+
+    function endCampaignDrag(e) {
+      if (!campaignDragData) return;
+      campaignDragData.block.classList.remove('dragging');
+      
+      const currentLeft = parseInt(campaignDragData.block.style.left);
+      let closestMonth = 0, closestDist = Infinity;
+      for (let i = 0; i < MONTHS.length; i++) {
+        const dist = Math.abs(currentLeft - getMonthOffset(i));
+        if (dist < closestDist) { closestDist = dist; closestMonth = i; }
+      }
+      
+      const duration = campaignDragData.camp.end - campaignDragData.camp.start;
+      campaignDragData.camp.start = closestMonth;
+      campaignDragData.camp.end = Math.min(closestMonth + duration, MONTHS.length - 1);
+      
+      renderCampaignsBar();
+      syncCampaignScroll();
+      updateAllTotals();
+      saveData();
+      showToast('Campaign moved!', true);
+      setTimeout(hideToast, 1500);
+      
+      campaignDragData = null;
+      document.removeEventListener('mousemove', doCampaignDrag);
+      document.removeEventListener('mouseup', endCampaignDrag);
+    }
+
+    function startCampaignResize(e, camp, edge) {
+      e.stopPropagation();
+      e.preventDefault();
+      resizingCampaign = camp;
+      resizeEdge = edge;
+      document.addEventListener('mousemove', doCampaignResize);
+      document.addEventListener('mouseup', endCampaignResize);
+    }
+
+    function doCampaignResize(e) {
+      if (!resizingCampaign) return;
+      const mainScroll = document.getElementById('mainScroll');
+      const rect = mainScroll.getBoundingClientRect();
+      const x = e.clientX - rect.left + mainScroll.scrollLeft;
+      
+      let targetMonth = 0, offset = 0;
+      for (let i = 0; i < MONTHS.length; i++) {
+        const w = getMonthWidth(i);
+        if (x < offset + w) { targetMonth = i; break; }
+        offset += w;
+        targetMonth = i;
+      }
+      
+      if (resizeEdge === 'left') resizingCampaign.start = Math.min(targetMonth, resizingCampaign.end);
+      else resizingCampaign.end = Math.max(targetMonth, resizingCampaign.start);
+      
+      renderCampaignsBar();
+      syncCampaignScroll();
+      updateAllTotals();
+    }
+
+    function endCampaignResize() {
+      if (resizingCampaign) {
+        saveData();
+        showToast('Campaign resized!', true);
+        setTimeout(hideToast, 1500);
+      }
+      resizingCampaign = null;
+      document.removeEventListener('mousemove', doCampaignResize);
+      document.removeEventListener('mouseup', endCampaignResize);
+    }
+
+    function handleDragStart(e) {
+      draggedItem = this;
+      isTemplateDrag = false;
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragEnd() {
+      if (draggedItem) draggedItem.classList.remove('dragging');
+      document.querySelectorAll('.shelf, .progress-bar, .dock-items').forEach(el => el.classList.remove('drag-over'));
+      draggedItem = null;
+      updateAllTotals();
+      saveData();
+    }
+
+    function setupDropZones() {
+      document.querySelectorAll('.shelf').forEach(shelf => {
+        shelf.ondragover = (e) => { e.preventDefault(); shelf.classList.add('drag-over'); };
+        shelf.ondragleave = (e) => { if (!shelf.contains(e.relatedTarget)) shelf.classList.remove('drag-over'); };
+        shelf.ondrop = (e) => {
+          e.preventDefault();
+          shelf.classList.remove('drag-over');
+          if (isTemplateDrag) { templateDropTarget = shelf; return; }
+          if (!draggedItem) return;
+          const stage = shelf.dataset.stage;
+          draggedItem.classList.remove('stage-nurturing', 'stage-ready', 'stage-committed', 'big-fish', 'on-hold');
+          draggedItem.classList.add('stage-' + stage);
+          draggedItem.dataset.stage = stage;
+          shelf.appendChild(draggedItem);
+          showToast(`Moved to ${capitalize(stage)}`, true);
+          setTimeout(hideToast, 1500);
+        };
+      });
+
+      document.querySelectorAll('.progress-bar').forEach(pb => {
+        pb.ondragover = (e) => { e.preventDefault(); pb.classList.add('drag-target'); };
+        pb.ondragleave = () => pb.classList.remove('drag-target');
+        pb.ondrop = (e) => {
+          e.preventDefault();
+          pb.classList.remove('drag-target');
+          if (isTemplateDrag || !draggedItem) return;
+          
+          const amount = parseInt(draggedItem.dataset.amount);
+          const name = draggedItem.querySelector('.opp-name').textContent;
+          const items = pb.querySelector('.progress-items');
+          const newItem = document.createElement('div');
+          newItem.className = 'progress-item';
+          newItem.innerHTML = `<span class="item-name">🎉 ${name}</span><span class="item-amount">$${formatAmount(amount)}</span>`;
+          items.appendChild(newItem);
+          
+          pb.dataset.secured = parseInt(pb.dataset.secured) + amount;
+          const idx = parseInt(pb.dataset.monthIdx);
+          MONTHS[idx].secured = parseInt(pb.dataset.secured);
+          
+          draggedItem.remove();
+          draggedItem = null;
+          updateAllTotals();
+          saveData();
+          showToast(`🎉 Won! +$${formatAmount(amount)}`, true);
+          setTimeout(hideToast, 2500);
+        };
+      });
+
+      const dockIdeas = document.getElementById('dockIdeas');
+      dockIdeas.ondragover = (e) => { e.preventDefault(); dockIdeas.classList.add('drag-over'); };
+      dockIdeas.ondragleave = () => dockIdeas.classList.remove('drag-over');
+      dockIdeas.ondrop = (e) => {
+        e.preventDefault();
+        dockIdeas.classList.remove('drag-over');
+        if (isTemplateDrag) { templateDropTarget = dockIdeas; return; }
+        if (!draggedItem) return;
+        draggedItem.classList.remove('stage-nurturing', 'stage-ready', 'stage-committed', 'on-hold');
+        draggedItem.classList.add('big-fish');
+        delete draggedItem.dataset.stage;
+        dockIdeas.appendChild(draggedItem);
+        showToast('Moved to Big Fish', true);
+        setTimeout(hideToast, 1500);
+      };
+
+      const dockHold = document.getElementById('dockHold');
+      dockHold.ondragover = (e) => { e.preventDefault(); dockHold.classList.add('drag-over'); };
+      dockHold.ondragleave = () => dockHold.classList.remove('drag-over');
+      dockHold.ondrop = (e) => {
+        e.preventDefault();
+        dockHold.classList.remove('drag-over');
+        if (isTemplateDrag) { templateDropTarget = dockHold; return; }
+        if (!draggedItem) return;
+        draggedItem.classList.remove('stage-nurturing', 'stage-ready', 'stage-committed', 'big-fish');
+        draggedItem.classList.add('on-hold');
+        delete draggedItem.dataset.stage;
+        dockHold.appendChild(draggedItem);
+        showToast('Put on hold', true);
+        setTimeout(hideToast, 1500);
+      };
+    }
+
+    // =====================================================================
+    // UPDATE TOTALS
+    // =====================================================================
+    function updateAllTotals() {
+      let totalPipeline = 0, totalYTD = 0;
+      
+      document.querySelectorAll('.month-column').forEach(col => {
+        const idx = parseInt(col.dataset.monthIdx);
+        const month = MONTHS[idx];
+        const shelves = col.querySelector('.shelves');
+        const pb = col.querySelector('.progress-bar');
+        
+        const baselineTotal = (month.baseline.recurring || 0) + (month.baseline.earned || 0);
+        const secured = parseInt(pb.dataset.secured);
+        const campaignContrib = getCampaignContribution(idx);
+        
+        let shelfTotal = 0;
+        shelves.querySelectorAll('.opp-block').forEach(b => shelfTotal += parseInt(b.dataset.amount) || 0);
+        totalPipeline += shelfTotal + campaignContrib;
+        
+        const target = parseInt(pb.dataset.target);
+        const combined = baselineTotal + secured + campaignContrib + shelfTotal;
+        totalYTD += secured;
+        
+        // Update footer - just total and gap
+        pb.querySelector('[data-total]').textContent = `$${formatAmount(combined)}`;
+        
+        const gapEl = pb.querySelector('[data-gap]');
+        const diff = combined - target;
+        if (diff >= 0) {
+          gapEl.textContent = `+$${formatAmount(diff)}`;
+          gapEl.className = 'progress-gap over';
+        } else {
+          gapEl.textContent = `-$${formatAmount(Math.abs(diff))}`;
+          gapEl.className = 'progress-gap under';
+        }
+        
+        // Update baseline label inside fill
+        const baselineLabel = pb.querySelector('.fill-baseline .baseline-label');
+        if (baselineLabel) {
+          baselineLabel.textContent = `${month.baseline.name} $${formatAmount(baselineTotal)}`;
+        }
+        
+        // Calculate fill heights (stacking from bottom)
+        const maxFillPct = 70;
+        const baselinePct = (baselineTotal / target) * maxFillPct;
+        const securedPct = ((baselineTotal + secured) / target) * maxFillPct;
+        const campaignPct = ((baselineTotal + secured + campaignContrib) / target) * maxFillPct;
+        const shelfPct = ((baselineTotal + secured + campaignContrib + shelfTotal) / target) * maxFillPct;
+        const overPct = combined > target ? Math.min(((combined - target) / target) * 25, 30) : 0;
+        
+        pb.querySelector('.fill-baseline').style.height = Math.min(baselinePct, 100) + '%';
+        pb.querySelector('.fill-secured').style.height = Math.min(securedPct, 100) + '%';
+        pb.querySelector('.fill-campaign').style.height = Math.min(campaignPct, 100) + '%';
+        pb.querySelector('.fill-shelf').style.height = Math.min(shelfPct, 100) + '%';
+        pb.querySelector('.fill-over').style.height = overPct + '%';
+      });
+      
+      document.getElementById('statPipeline').textContent = '$' + formatAmount(totalPipeline);
+      document.getElementById('statYTD').textContent = '$' + formatAmount(totalYTD);
+    }
+
+    // =====================================================================
+    // MODALS
+    // =====================================================================
+    function openEdit(block, isNew = false) {
+      currentEditBlock = block;
+      document.getElementById('editPanelTitle').textContent = isNew ? 'New Opportunity' : 'Edit Opportunity';
+      document.getElementById('editName').value = block.querySelector('.opp-name').textContent || '';
+      document.getElementById('editAmount').value = displayAmountForInput(parseInt(block.dataset.amount || 10000));
+      
+      const cat = block.dataset.category || 'individual';
+      const stage = block.dataset.stage || 'nurturing';
+      
+      document.querySelectorAll('.category-option').forEach(o => o.classList.toggle('selected', o.dataset.category === cat));
+      document.querySelectorAll('.stage-option').forEach(o => o.classList.toggle('selected', o.dataset.stage === stage));
+      
+      document.getElementById('editOverlay').classList.add('active');
+      if (isNew) setTimeout(() => document.getElementById('editName').focus(), 300);
+    }
+
+    function closeEdit() {
+      document.getElementById('editOverlay').classList.remove('active');
+      if (currentEditBlock && currentEditBlock.querySelector('.opp-name').textContent === '') {
+        currentEditBlock.remove();
+        updateAllTotals();
+      }
+      currentEditBlock = null;
+    }
+
+    function selectCategory(el) {
+      document.querySelectorAll('.category-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function selectStage(el) {
+      document.querySelectorAll('.stage-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+    }
+
+    function saveEdit() {
+      if (!currentEditBlock) return;
+      const name = document.getElementById('editName').value.trim();
+      if (!name) { document.getElementById('editName').focus(); return; }
+      
+      const amount = parseAmount(document.getElementById('editAmount').value);
+      const category = document.querySelector('.category-option.selected')?.dataset.category || 'individual';
+      const stage = document.querySelector('.stage-option.selected')?.dataset.stage || 'nurturing';
+      
+      currentEditBlock.querySelector('.opp-name').textContent = name;
+      currentEditBlock.querySelector('.opp-amount').textContent = '$' + formatAmount(amount);
+      currentEditBlock.dataset.amount = amount;
+      currentEditBlock.dataset.category = category;
+      currentEditBlock.dataset.stage = stage;
+      currentEditBlock.dataset.size = getSize(amount);
+      
+      const catIcon = currentEditBlock.querySelector('.opp-category');
+      catIcon.className = 'opp-category cat-' + category;
+      catIcon.textContent = getCategoryIcon(category);
+      
+      if (!currentEditBlock.classList.contains('big-fish') && !currentEditBlock.classList.contains('on-hold')) {
+        currentEditBlock.classList.remove('stage-nurturing', 'stage-ready', 'stage-committed');
+        currentEditBlock.classList.add('stage-' + stage);
+        
+        const currentShelf = currentEditBlock.closest('.shelf');
+        if (currentShelf && currentShelf.dataset.stage !== stage) {
+          const shelves = currentShelf.closest('.shelves');
+          const targetShelf = shelves.querySelector(`.shelf[data-stage="${stage}"]`);
+          if (targetShelf) targetShelf.appendChild(currentEditBlock);
+        }
+      }
+      
+      document.getElementById('editOverlay').classList.remove('active');
+      currentEditBlock = null;
+      updateAllTotals();
+      saveData();
+      showToast('Saved!', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    function deleteOpp() {
+      if (!currentEditBlock) return;
+      currentEditBlock.remove();
+      document.getElementById('editOverlay').classList.remove('active');
+      currentEditBlock = null;
+      updateAllTotals();
+      saveData();
+      showToast('Deleted', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    function putOnHold() {
+      if (!currentEditBlock) return;
+      currentEditBlock.classList.remove('stage-nurturing', 'stage-ready', 'stage-committed', 'big-fish', 'new-opp');
+      currentEditBlock.classList.add('on-hold');
+      delete currentEditBlock.dataset.stage;
+      document.getElementById('dockHold').appendChild(currentEditBlock);
+      document.getElementById('editOverlay').classList.remove('active');
+      currentEditBlock = null;
+      updateAllTotals();
+      saveData();
+      showToast('Put on hold', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    // Campaign Modal
+    function openCampaignModal() {
+      currentCampaign = null;
+      document.getElementById('campaignModalTitle').textContent = 'New Campaign';
+      document.getElementById('campaignName').value = '';
+      document.getElementById('campaignGoal').value = '';
+      document.getElementById('campaignStart').value = '2';
+      document.getElementById('campaignEnd').value = '4';
+      document.getElementById('campaignDeleteBtn').style.display = 'none';
+      document.getElementById('campaignOverlay').classList.add('active');
+      document.getElementById('campaignModal').classList.add('active');
+    }
+
+    function openCampaignEdit(camp) {
+      currentCampaign = camp;
+      document.getElementById('campaignModalTitle').textContent = 'Edit Campaign';
+      document.getElementById('campaignName').value = camp.name;
+      document.getElementById('campaignGoal').value = displayAmountForInput(camp.amount);
+      document.getElementById('campaignStart').value = camp.start;
+      document.getElementById('campaignEnd').value = camp.end;
+      document.getElementById('campaignDeleteBtn').style.display = 'block';
+      document.getElementById('campaignOverlay').classList.add('active');
+      document.getElementById('campaignModal').classList.add('active');
+    }
+
+    function closeCampaignModal() {
+      document.getElementById('campaignOverlay').classList.remove('active');
+      document.getElementById('campaignModal').classList.remove('active');
+      currentCampaign = null;
+    }
+
+    function saveCampaign() {
+      const name = document.getElementById('campaignName').value;
+      const amount = parseAmount(document.getElementById('campaignGoal').value);
+      const start = parseInt(document.getElementById('campaignStart').value);
+      const end = parseInt(document.getElementById('campaignEnd').value);
+      
+      if (currentCampaign) {
+        currentCampaign.name = name;
+        currentCampaign.amount = amount;
+        currentCampaign.start = start;
+        currentCampaign.end = end;
+      } else {
+        CAMPAIGNS.push({ id: 'camp-' + Date.now(), name, amount, raised: 0, start, end });
+      }
+      
+      renderCampaignsBar();
+      syncCampaignScroll();
+      updateAllTotals();
+      saveData();
+      closeCampaignModal();
+      showToast('Campaign saved!', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    function deleteCampaign() {
+      if (currentCampaign) {
+        const idx = CAMPAIGNS.findIndex(c => c.id === currentCampaign.id);
+        if (idx > -1) CAMPAIGNS.splice(idx, 1);
+      }
+      renderCampaignsBar();
+      syncCampaignScroll();
+      updateAllTotals();
+      saveData();
+      closeCampaignModal();
+      showToast('Campaign deleted', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    // Baseline Modal
+    function openBaselineModal(monthIdx) {
+      currentBaselineMonth = monthIdx;
+      const month = MONTHS[monthIdx];
+      document.getElementById('baselineMonthName').textContent = month.name;
+      document.getElementById('baselineName').value = month.baseline.name || 'Recurring';
+      document.getElementById('baselineRecurring').value = displayAmountForInput(month.baseline.recurring || 0);
+      document.getElementById('baselineEarned').value = displayAmountForInput(month.baseline.earned || 0);
+      document.getElementById('baselineOverlay').classList.add('active');
+      document.getElementById('baselineModal').classList.add('active');
+    }
+
+    function closeBaselineModal() {
+      document.getElementById('baselineOverlay').classList.remove('active');
+      document.getElementById('baselineModal').classList.remove('active');
+      currentBaselineMonth = null;
+    }
+
+    function saveBaseline() {
+      if (currentBaselineMonth === null) return;
+      const month = MONTHS[currentBaselineMonth];
+      month.baseline.name = document.getElementById('baselineName').value;
+      month.baseline.recurring = parseAmount(document.getElementById('baselineRecurring').value);
+      month.baseline.earned = parseAmount(document.getElementById('baselineEarned').value);
+      renderMonths();
+      saveData();
+      closeBaselineModal();
+      showToast('Baseline updated!', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    // Settings Modal
+    function openSettings() {
+      document.getElementById('settingsGoal').value = displayAmountForInput(CONFIG.annualGoal);
+      document.getElementById('settingsStartMonth').value = CONFIG.fiscalStartMonth;
+      document.getElementById('settingsStartYear').value = CONFIG.fiscalStartYear;
+      document.getElementById('settingsCurrentMonth').value = CONFIG.currentMonthIndex;
+      document.getElementById('settingsOverlay').classList.add('active');
+      document.getElementById('settingsModal').classList.add('active');
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsOverlay').classList.remove('active');
+      document.getElementById('settingsModal').classList.remove('active');
+    }
+
+    function saveSettings() {
+      CONFIG.annualGoal = parseAmount(document.getElementById('settingsGoal').value);
+      CONFIG.fiscalStartMonth = parseInt(document.getElementById('settingsStartMonth').value);
+      CONFIG.fiscalStartYear = parseInt(document.getElementById('settingsStartYear').value);
+      CONFIG.currentMonthIndex = parseInt(document.getElementById('settingsCurrentMonth').value);
+      
+      // Preserve existing data where possible
+      const oldShelfOpps = collectAllShelfOpps();
+      const oldBigFish = collectOpps('dockIdeas');
+      const oldOnHold = collectOpps('dockHold');
+      
+      generateMonths();
+      SHELF_OPPS = oldShelfOpps;
+      BIG_FISH = oldBigFish;
+      ON_HOLD = oldOnHold;
+      
+      document.getElementById('monthsGrid').innerHTML = '';
+      renderAll();
+      saveData();
+      closeSettings();
+      showToast('Settings saved!', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    function exportData() {
+      saveData();
+      const data = localStorage.getItem(STORAGE_KEY);
+      const blob = new Blob([data], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cultivation-backup-' + new Date().toISOString().slice(0,10) + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Data exported!', true);
+      setTimeout(hideToast, 1500);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          location.reload();
+        } catch (err) {
+          alert('Invalid file format');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function resetData() {
+      if (confirm('This will delete all your data. Are you sure?')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+
+    // =====================================================================
+    // UTILITIES
+    // =====================================================================
+    function scrollMonths(dir) {
+      document.getElementById('mainScroll').scrollLeft += dir * 350;
+    }
+
+    function showToast(html, isSuccess = false) {
+      const toast = document.getElementById('toast');
+      toast.innerHTML = html;
+      toast.classList.add('visible');
+      toast.style.background = isSuccess ? 'var(--ground)' : 'var(--text)';
+    }
+
+    function hideToast() {
+      document.getElementById('toast').classList.remove('visible');
+    }
+
+    // Start the app
+    initializeApp();
+  </script>
+</body>
+</html>
