@@ -31,8 +31,8 @@
       --bucket-bg: #FAFAF8;
       --bucket-border: #E0DBD2;
       
-      --month-width: 280px;
-      --month-width-focus: 340px;
+      --month-width: 320px;
+      --month-width-focus: 400px;
       --campaigns-bar-height: 70px;
     }
     
@@ -41,13 +41,15 @@
     body {
       font-family: 'DM Sans', sans-serif;
       background: linear-gradient(180deg, #F5F3EF 0%, #EBE7E0 100%);
-      min-height: 100vh;
+      height: 100vh;
       color: var(--text);
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
     
     header {
-      padding: 10px 24px;
+      padding: 14px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -55,63 +57,64 @@
       box-shadow: 0 2px 12px var(--shadow);
       position: relative;
       z-index: 100;
+      flex-shrink: 0;
     }
     
     .logo {
       font-family: 'Fraunces', serif;
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 500;
       color: var(--ground);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
     
     .logo-icon {
-      width: 28px;
-      height: 28px;
+      width: 34px;
+      height: 34px;
       background: linear-gradient(135deg, var(--growth) 0%, var(--ground) 100%);
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 12px;
+      font-size: 16px;
     }
     
     .header-stats {
       display: flex;
-      gap: 20px;
+      gap: 24px;
       align-items: center;
     }
     
     .stat-pill {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+      gap: 8px;
+      padding: 10px 18px;
       background: #F5F5F5;
       border-radius: 100px;
-      font-size: 12px;
+      font-size: 14px;
     }
     
     .stat-pill .label { color: var(--subtle); }
-    .stat-pill .value { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; }
+    .stat-pill .value { font-family: 'Fraunces', serif; font-weight: 600; font-size: 18px; }
     .stat-pill .value.positive { color: var(--ground); }
     
     .header-actions {
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
     }
     
     .template-block {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 14px;
+      gap: 12px;
+      padding: 10px 18px;
       background: white;
       border: 2px dashed var(--bloom);
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: grab;
       transition: all 0.2s ease;
       user-select: none;
@@ -127,27 +130,27 @@
     .template-block.dragging { opacity: 0.5; }
     
     .template-icon {
-      width: 32px;
-      height: 32px;
+      width: 38px;
+      height: 38px;
       background: linear-gradient(135deg, var(--bloom-light) 0%, var(--bloom) 100%);
-      border-radius: 6px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
       color: white;
     }
     
     .template-text { display: flex; flex-direction: column; }
-    .template-label { font-size: 12px; font-weight: 600; color: var(--bloom); }
-    .template-hint { font-size: 9px; color: var(--subtle); }
+    .template-label { font-size: 14px; font-weight: 600; color: var(--bloom); }
+    .template-hint { font-size: 11px; color: var(--subtle); }
     
     .btn-settings {
-      padding: 8px 12px;
+      padding: 10px 14px;
       background: #F5F5F5;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
@@ -158,11 +161,12 @@
       display: flex;
       background: white;
       border-bottom: 2px solid var(--belt-dark);
+      flex-shrink: 0;
     }
     
     .dock-zone {
-      padding: 10px 16px;
-      min-height: 70px;
+      padding: 14px 20px;
+      min-height: 90px;
     }
     
     .dock-ideas {
@@ -180,17 +184,17 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 6px;
+      margin-bottom: 10px;
     }
     
-    .dock-title { font-family: 'Fraunces', serif; font-size: 12px; color: var(--text); }
-    .dock-hint { font-size: 10px; color: var(--subtle); }
+    .dock-title { font-family: 'Fraunces', serif; font-size: 15px; color: var(--text); }
+    .dock-hint { font-size: 12px; color: var(--subtle); }
     
     .dock-items {
       display: flex;
-      gap: 8px;
+      gap: 10px;
       flex-wrap: wrap;
-      min-height: 36px;
+      min-height: 44px;
       align-items: flex-start;
     }
     
@@ -200,20 +204,21 @@
     }
     
     .campaigns-bar {
-      height: var(--campaigns-bar-height);
+      height: 80px;
       background: linear-gradient(180deg, #F8F6FC 0%, #EFEBF5 100%);
       border-bottom: 3px solid var(--campaign-light);
       position: relative;
       display: flex;
       align-items: center;
       overflow: hidden;
+      flex-shrink: 0;
     }
     
     .campaigns-bar-label {
       position: absolute;
-      left: 12px;
-      top: 8px;
-      font-size: 10px;
+      left: 14px;
+      top: 10px;
+      font-size: 12px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -223,14 +228,14 @@
     
     .campaigns-bar-add {
       position: absolute;
-      right: 16px;
+      right: 18px;
       top: 50%;
       transform: translateY(-50%);
-      padding: 6px 12px;
+      padding: 8px 14px;
       background: white;
       border: 2px dashed var(--campaign-light);
-      border-radius: 6px;
-      font-size: 11px;
+      border-radius: 8px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--campaign);
       cursor: pointer;
@@ -259,17 +264,17 @@
     
     .campaign-block {
       position: absolute;
-      top: 18px;
-      height: 44px;
+      top: 20px;
+      height: 50px;
       background: linear-gradient(135deg, var(--campaign) 0%, #7B6CB8 100%);
-      border-radius: 10px;
-      padding: 0 14px;
+      border-radius: 12px;
+      padding: 0 18px;
       color: white;
       cursor: grab;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 14px;
       box-shadow: 0 3px 12px rgba(139, 126, 200, 0.35);
       transition: box-shadow 0.2s ease;
       z-index: 5;
@@ -281,43 +286,43 @@
     .campaign-block .camp-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       min-width: 0;
       flex: 1;
     }
     
     .campaign-block .camp-name {
       font-weight: 600;
-      font-size: 13px;
+      font-size: 15px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     
     .campaign-block .camp-dates {
-      font-size: 10px;
-      opacity: 0.8;
+      font-size: 12px;
+      opacity: 0.85;
       white-space: nowrap;
     }
     
     .campaign-block .camp-amount {
       font-family: 'Fraunces', serif;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
       white-space: nowrap;
     }
     
     .campaign-block .camp-edit {
       position: absolute;
-      top: -8px;
-      right: -8px;
-      width: 24px;
-      height: 24px;
+      top: -10px;
+      right: -10px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
       background: white;
       border: 2px solid var(--campaign);
       color: var(--campaign);
-      font-size: 11px;
+      font-size: 13px;
       cursor: pointer;
       display: none;
       align-items: center;
@@ -368,20 +373,21 @@
     
     .scroll-container {
       position: relative;
-      height: calc(100vh - 210px);
+      flex: 1;
+      min-height: 0;
     }
     
     .scroll-btn {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border: none;
       background: white;
       box-shadow: 0 4px 16px var(--shadow);
-      font-size: 20px;
+      font-size: 22px;
       cursor: pointer;
       z-index: 50;
       transition: all 0.2s ease;
@@ -403,21 +409,24 @@
       scroll-behavior: smooth;
     }
     
-    .main-scroll::-webkit-scrollbar { height: 10px; }
+    .main-scroll::-webkit-scrollbar { height: 12px; }
     .main-scroll::-webkit-scrollbar-track { background: var(--belt); }
-    .main-scroll::-webkit-scrollbar-thumb { background: var(--belt-dark); border-radius: 5px; }
+    .main-scroll::-webkit-scrollbar-thumb { background: var(--belt-dark); border-radius: 6px; }
     
     .months-grid {
       display: flex;
       width: max-content;
+      min-height: 100%;
     }
     
+    /* ========== MONTH COLUMN ========== */
     .month-column {
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       border-right: 2px dashed var(--belt-dark);
       background: white;
+      min-height: 100%;
     }
     
     .month-column:last-child { border-right: none; }
@@ -428,37 +437,38 @@
     .month-column.status-past { opacity: 0.6; }
     
     .month-header {
-      padding: 10px 12px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       background: white;
       border-bottom: 1px solid var(--belt-dark);
+      flex-shrink: 0;
     }
     
     .month-info {
       display: flex;
       align-items: baseline;
-      gap: 8px;
+      gap: 12px;
     }
     
     .month-name {
       font-family: 'Fraunces', serif;
-      font-size: 17px;
+      font-size: 22px;
       font-weight: 500;
     }
     
     .month-target {
-      font-size: 11px;
+      font-size: 14px;
       color: var(--subtle);
     }
     
     .month-target strong { color: var(--text); }
     
     .month-status {
-      padding: 3px 10px;
+      padding: 5px 14px;
       border-radius: 100px;
-      font-size: 9px;
+      font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.3px;
@@ -470,36 +480,37 @@
     .month-status.upcoming { background: var(--potential-light); color: #5A7A8A; }
     
     .shelves {
-      min-height: 140px;
+      flex: 1;
+      min-height: 180px;
       background: var(--belt);
-      padding: 8px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
       position: relative;
       border-bottom: 3px solid var(--belt-dark);
-      flex-shrink: 0;
     }
     
     .shelves::after {
       content: '↓';
       position: absolute;
-      right: 6px;
+      right: 8px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 16px;
+      font-size: 20px;
       color: var(--subtle);
       opacity: 0.2;
     }
     
     .shelf {
-      min-height: 36px;
-      padding: 4px 6px;
-      padding-top: 16px;
-      border-radius: 6px;
+      flex: 1;
+      min-height: 50px;
+      padding: 8px 10px;
+      padding-top: 22px;
+      border-radius: 8px;
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 8px;
       align-content: flex-start;
       position: relative;
       transition: background 0.2s ease;
@@ -510,9 +521,9 @@
     .shelf::before {
       content: attr(data-label);
       position: absolute;
-      left: 6px;
-      top: 2px;
-      font-size: 8px;
+      left: 10px;
+      top: 4px;
+      font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
       color: var(--subtle);
@@ -524,15 +535,15 @@
     .shelf-committed { border-top: 2px dashed var(--golden); background: rgba(232, 200, 109, 0.08); }
     
     .progress-container {
-      padding: 8px;
+      padding: 12px;
       flex-shrink: 0;
     }
     
     .progress-bar {
-      height: 100px;
+      height: 130px;
       background: var(--bucket-bg);
       border: 3px solid var(--bucket-border);
-      border-radius: 14px;
+      border-radius: 16px;
       position: relative;
       overflow: hidden;
     }
@@ -544,12 +555,12 @@
     
     .progress-fills {
       position: absolute;
-      bottom: 26px;
+      bottom: 36px;
       left: 0;
       right: 0;
       top: 0;
       overflow: hidden;
-      border-radius: 11px 11px 0 0;
+      border-radius: 13px 13px 0 0;
     }
     
     /* Baseline is the bottom-most layer with clickable label */
@@ -563,17 +574,17 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      padding-bottom: 3px;
+      padding-bottom: 5px;
     }
     
     .fill-baseline .baseline-label {
-      font-size: 8px;
+      font-size: 11px;
       color: white;
       text-shadow: 0 1px 2px rgba(0,0,0,0.3);
       font-weight: 500;
       cursor: pointer;
-      padding: 1px 5px;
-      border-radius: 3px;
+      padding: 3px 8px;
+      border-radius: 4px;
       background: rgba(0,0,0,0.15);
       transition: background 0.2s ease;
       white-space: nowrap;
@@ -650,65 +661,65 @@
     .target-line::after {
       content: 'Target';
       position: absolute;
-      right: 4px;
-      top: -9px;
-      font-size: 8px;
+      right: 6px;
+      top: -10px;
+      font-size: 10px;
       color: var(--subtle);
       background: rgba(255,255,255,0.9);
-      padding: 0 3px;
-      border-radius: 2px;
+      padding: 1px 5px;
+      border-radius: 3px;
     }
     
     .progress-items {
       position: absolute;
       z-index: 10;
-      bottom: 28px;
-      left: 4px;
-      right: 4px;
+      bottom: 38px;
+      left: 6px;
+      right: 6px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
-      max-height: 40px;
+      gap: 3px;
+      max-height: 50px;
       overflow-y: auto;
     }
     
     .progress-item {
       background: white;
-      border-radius: 3px;
-      padding: 2px 5px;
+      border-radius: 4px;
+      padding: 4px 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 8px;
-      box-shadow: 0 1px 2px var(--shadow);
+      font-size: 10px;
+      box-shadow: 0 1px 3px var(--shadow);
     }
     
     .progress-item .item-name { font-weight: 500; }
-    .progress-item .item-amount { font-family: 'Fraunces', serif; font-weight: 600; color: var(--ground); font-size: 9px; }
+    .progress-item .item-amount { font-family: 'Fraunces', serif; font-weight: 600; color: var(--ground); font-size: 11px; }
     
     .progress-footer {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 4px 10px;
+      padding: 8px 14px;
       background: white;
       border-top: 2px solid var(--bucket-border);
-      border-radius: 0 0 11px 11px;
+      border-radius: 0 0 13px 13px;
       z-index: 20;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
-    .progress-total { font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600; }
-    .progress-gap { font-size: 10px; font-weight: 600; }
+    .progress-total { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 600; }
+    .progress-gap { font-size: 14px; font-weight: 600; }
     .progress-gap.over { color: var(--ground); }
     .progress-gap.under { color: var(--bloom); }
     
     .opp-block {
       background: white;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: grab;
       transition: all 0.15s ease;
       position: relative;
@@ -729,15 +740,15 @@
     
     .opp-block .opp-edit {
       position: absolute;
-      top: -6px;
-      right: -6px;
-      width: 20px;
-      height: 20px;
+      top: -8px;
+      right: -8px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: white;
       border: 2px solid var(--ground);
       color: var(--ground);
-      font-size: 9px;
+      font-size: 11px;
       cursor: pointer;
       display: none;
       align-items: center;
@@ -749,15 +760,15 @@
     
     .opp-block .opp-category {
       position: absolute;
-      top: -5px;
-      left: -5px;
-      width: 18px;
-      height: 18px;
+      top: -6px;
+      left: -6px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9px;
+      font-size: 11px;
       background: white;
       box-shadow: 0 1px 3px var(--shadow);
       border: 2px solid;
@@ -769,7 +780,7 @@
     .opp-category.cat-corporate { border-color: var(--golden); }
     
     .opp-block .opp-name {
-      font-size: 10px;
+      font-size: 12px;
       font-weight: 600;
       color: var(--text);
       margin-bottom: 2px;
@@ -786,35 +797,35 @@
       line-height: 1;
     }
     
-    .opp-block[data-size="2k"] { width: 48px; padding: 5px 6px; }
-    .opp-block[data-size="2k"] .opp-amount { font-size: 11px; }
-    .opp-block[data-size="2k"] .opp-name { font-size: 8px; }
+    .opp-block[data-size="2k"] { width: 60px; padding: 8px 10px; }
+    .opp-block[data-size="2k"] .opp-amount { font-size: 14px; }
+    .opp-block[data-size="2k"] .opp-name { font-size: 10px; }
     
-    .opp-block[data-size="5k"] { width: 65px; padding: 6px 8px; }
-    .opp-block[data-size="5k"] .opp-amount { font-size: 13px; }
-    .opp-block[data-size="5k"] .opp-name { font-size: 9px; }
+    .opp-block[data-size="5k"] { width: 80px; padding: 10px 12px; }
+    .opp-block[data-size="5k"] .opp-amount { font-size: 16px; }
+    .opp-block[data-size="5k"] .opp-name { font-size: 11px; }
     
-    .opp-block[data-size="8k"] { width: 85px; padding: 8px 10px; }
-    .opp-block[data-size="8k"] .opp-amount { font-size: 15px; }
+    .opp-block[data-size="8k"] { width: 100px; padding: 12px 14px; }
+    .opp-block[data-size="8k"] .opp-amount { font-size: 18px; }
     
-    .opp-block[data-size="10k"] { width: 100px; padding: 10px 12px; }
-    .opp-block[data-size="10k"] .opp-amount { font-size: 17px; }
+    .opp-block[data-size="10k"] { width: 120px; padding: 14px 16px; }
+    .opp-block[data-size="10k"] .opp-amount { font-size: 20px; }
     
-    .opp-block[data-size="15k"] { width: 125px; padding: 12px 14px; }
-    .opp-block[data-size="15k"] .opp-amount { font-size: 20px; }
-    .opp-block[data-size="15k"] .opp-name { font-size: 11px; }
+    .opp-block[data-size="15k"] { width: 145px; padding: 16px 18px; }
+    .opp-block[data-size="15k"] .opp-amount { font-size: 24px; }
+    .opp-block[data-size="15k"] .opp-name { font-size: 13px; }
     
-    .opp-block[data-size="20k"] { width: 150px; padding: 14px 16px; }
-    .opp-block[data-size="20k"] .opp-amount { font-size: 24px; }
-    .opp-block[data-size="20k"] .opp-name { font-size: 12px; }
+    .opp-block[data-size="20k"] { width: 170px; padding: 18px 20px; }
+    .opp-block[data-size="20k"] .opp-amount { font-size: 28px; }
+    .opp-block[data-size="20k"] .opp-name { font-size: 14px; }
     
-    .opp-block[data-size="30k"] { width: 180px; padding: 16px 18px; }
-    .opp-block[data-size="30k"] .opp-amount { font-size: 28px; }
-    .opp-block[data-size="30k"] .opp-name { font-size: 13px; }
+    .opp-block[data-size="30k"] { width: 200px; padding: 20px 22px; }
+    .opp-block[data-size="30k"] .opp-amount { font-size: 32px; }
+    .opp-block[data-size="30k"] .opp-name { font-size: 15px; }
     
-    .opp-block[data-size="50k"] { width: 220px; padding: 20px 22px; }
-    .opp-block[data-size="50k"] .opp-amount { font-size: 34px; }
-    .opp-block[data-size="50k"] .opp-name { font-size: 14px; }
+    .opp-block[data-size="50k"] { width: 240px; padding: 24px 26px; }
+    .opp-block[data-size="50k"] .opp-amount { font-size: 38px; }
+    .opp-block[data-size="50k"] .opp-name { font-size: 16px; }
     
     .opp-block.stage-nurturing { border-color: var(--growth-light); }
     .opp-block.stage-ready { border-color: var(--bloom); }
@@ -1526,7 +1537,7 @@
     // HELPERS
     // =====================================================================
     function getMonthWidth(idx) {
-      return (MONTHS[idx].status === 'current' || MONTHS[idx].status === 'next') ? 340 : 280;
+      return (MONTHS[idx].status === 'current' || MONTHS[idx].status === 'next') ? 400 : 320;
     }
     
     function getMonthOffset(idx) {
@@ -1692,7 +1703,7 @@
                 <div class="fill-secured"></div>
                 <div class="fill-baseline"><span class="baseline-label" onclick="openBaselineModal(${idx})">${month.baseline.name} $${formatAmount(baselineTotal)}</span></div>
               </div>
-              <div class="target-line" style="bottom: calc(70% + 26px);"></div>
+              <div class="target-line" style="bottom: calc(70% + 36px);"></div>
               <div class="progress-items"></div>
               <div class="progress-footer">
                 <span class="progress-total" data-total>$${formatAmount(month.secured)}</span>
